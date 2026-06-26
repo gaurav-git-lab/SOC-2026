@@ -1,0 +1,254 @@
+/* ==========================================================================
+   SOS Emergency Response App - Emergency / Home Screen Styles
+   ========================================================================== */
+
+#screen-home {
+    justify-content: space-between;
+    align-items: center;
+    height: 100vh;
+}
+
+#screen-home .screen-content {
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+/* ===== STATUS BAR ===== */
+.status-bar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-3) var(--space-4);
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-6);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+.status-item svg {
+    color: var(--text-muted);
+}
+
+/* Specific status colors */
+#gps-status.active svg {
+    color: var(--success-green);
+    filter: drop-shadow(0 0 4px var(--success-green-glow));
+}
+
+#battery-status.low {
+    color: var(--emergency-red);
+}
+#battery-status.low svg {
+    color: var(--emergency-red);
+}
+
+/* ===== EMERGENCY AREA (SOS BUTTON) ===== */
+.emergency-area {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    margin: var(--space-10) 0;
+}
+
+.emergency-ripple {
+    position: absolute;
+    width: 240px;
+    height: 240px;
+    border-radius: 50%;
+    background: var(--emergency-red-glow);
+    z-index: 1;
+    animation: ripple 2.5s infinite ease-out;
+    pointer-events: none;
+}
+
+.emergency-btn {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border: 8px solid rgba(255, 45, 85, 0.2);
+    background: linear-gradient(135deg, var(--emergency-red), #ad0829);
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    cursor: pointer;
+    box-shadow: 0 0 50px var(--emergency-red-glow),
+                inset 0 4px 15px rgba(255, 255, 255, 0.4);
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-smooth);
+    outline: none;
+    animation: pulse 2s infinite ease-in-out;
+}
+
+.emergency-btn-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+}
+
+.emergency-btn svg {
+    width: 42px;
+    height: 42px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.emergency-btn:hover {
+    transform: scale(1.02);
+    background: linear-gradient(135deg, var(--emergency-red-hover), #be0f33);
+    border-color: rgba(255, 45, 85, 0.35);
+    box-shadow: 0 0 60px rgba(255, 45, 85, 0.6);
+}
+
+.emergency-btn:active {
+    transform: scale(0.95);
+    border-color: rgba(255, 45, 85, 0.6);
+    box-shadow: 0 0 30px rgba(255, 45, 85, 0.8);
+}
+
+/* Active State styling when SOS triggered */
+.emergency-active-border {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 4px solid var(--emergency-red);
+    box-shadow: inset 0 0 30px rgba(255, 45, 85, 0.6);
+    z-index: 999;
+    pointer-events: none;
+    animation: heartbeat 1.5s infinite ease-in-out;
+}
+
+.emergency-hint {
+    margin-top: var(--space-6);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* ===== LOCATION DISPLAY WIDGET ===== */
+.location-info {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-4);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+}
+
+.location-coords {
+    font-size: 13px;
+    font-family: monospace;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+.maps-link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--pending-blue);
+    text-decoration: none;
+}
+
+.maps-link:hover {
+    text-decoration: underline;
+}
+
+/* ===== COUNTDOWN OVERLAY ===== */
+.countdown-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 10, 15, 0.95);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.countdown-overlay.active {
+    display: flex;
+}
+
+.countdown-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-6);
+    text-align: center;
+}
+
+.countdown-number {
+    font-size: 120px;
+    font-weight: 900;
+    color: var(--emergency-red);
+    text-shadow: 0 0 50px var(--emergency-red-glow);
+    line-height: 1;
+}
+
+.countdown-text {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--text-primary);
+    letter-spacing: 0.5px;
+    margin-bottom: var(--space-4);
+}
+
+.cancel-countdown-btn {
+    background: transparent;
+    border: 2px solid var(--text-muted);
+    color: var(--text-primary);
+    padding: var(--space-3) var(--space-8);
+    border-radius: var(--radius-full);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.cancel-countdown-btn:hover {
+    border-color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.cancel-countdown-btn:active {
+    transform: scale(0.96);
+}

@@ -1,0 +1,191 @@
+/* ==========================================================================
+   SOS Emergency Response App - Emergency Contacts Styles
+   ========================================================================== */
+
+#screen-contacts {
+    padding-bottom: 90px;
+}
+
+/* ===== CONTACT LIST CONTAINER ===== */
+.contacts-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-top: var(--space-2);
+}
+
+/* ===== CONTACT CARD ===== */
+.contact-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    box-shadow: var(--glass-shadow);
+    transition: var(--transition-smooth);
+    position: relative;
+    overflow: hidden;
+}
+
+.contact-card:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+.contact-info-block {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    flex-grow: 1;
+}
+
+/* Avatar Circle */
+.contact-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(10, 132, 255, 0.15);
+    border: 1px solid rgba(10, 132, 255, 0.3);
+    color: var(--pending-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.contact-card:nth-child(even) .contact-avatar {
+    background: rgba(255, 45, 85, 0.1);
+    border-color: rgba(255, 45, 85, 0.25);
+    color: var(--emergency-red);
+}
+
+.contact-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.contact-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.contact-phone {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-family: monospace;
+}
+
+.contact-relation-badge {
+    align-self: flex-start;
+    font-size: 10px;
+    padding: 2px var(--space-2);
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+/* Contact Actions */
+.contact-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.contact-action-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    transition: var(--transition-smooth);
+}
+
+.contact-action-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-primary);
+}
+
+.contact-action-btn.delete-btn:hover {
+    background: rgba(255, 45, 85, 0.15);
+    color: var(--emergency-red);
+}
+
+/* ===== ADD CONTACT FLOATING BUTTON ===== */
+.add-contact-btn {
+    position: fixed;
+    bottom: 84px;
+    right: var(--space-5);
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--emergency-red);
+    color: #ffffff;
+    border: none;
+    box-shadow: 0 4px 15px var(--emergency-red-glow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 90;
+    transition: var(--transition-smooth);
+}
+
+.add-contact-btn:hover {
+    background: var(--emergency-red-hover);
+    transform: translateY(-2px) rotate(90deg);
+}
+
+.add-contact-btn:active {
+    transform: translateY(0) scale(0.95);
+}
+
+.add-contact-btn svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* ===== EMPTY STATE ===== */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: var(--space-10) var(--space-6);
+    background: var(--glass-bg);
+    border: 1px dashed var(--glass-border);
+    border-radius: var(--radius-lg);
+    color: var(--text-muted);
+    margin-top: var(--space-4);
+}
+
+.empty-state-icon {
+    font-size: 48px;
+    margin-bottom: var(--space-4);
+    opacity: 0.6;
+}
+
+.empty-state h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--space-2);
+}
+
+.empty-state p {
+    font-size: 14px;
+    line-height: 1.5;
+}

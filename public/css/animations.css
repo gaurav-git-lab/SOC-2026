@@ -1,0 +1,206 @@
+/* ==========================================================================
+   SOS Emergency Response App - Transitions & Micro-Animations
+   ========================================================================== */
+
+/* ===== KEYFRAMES ===== */
+
+/* Gentle scaling pulse for buttons */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+    100% { transform: scale(1); }
+}
+
+/* Intense emergency button pulse */
+@keyframes emergencyPulse {
+    0% {
+        box-shadow: 0 0 30px rgba(255, 45, 85, 0.4), 
+                    inset 0 4px 15px rgba(255, 255, 255, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 60px rgba(255, 45, 85, 0.75), 
+                    inset 0 4px 15px rgba(255, 255, 255, 0.6);
+        border-color: rgba(255, 45, 85, 0.4);
+    }
+    100% {
+        box-shadow: 0 0 30px rgba(255, 45, 85, 0.4), 
+                    inset 0 4px 15px rgba(255, 255, 255, 0.4);
+    }
+}
+
+/* Heartbeat scaling for active alarm borders */
+@keyframes heartbeat {
+    0% { transform: scale(1); opacity: 0.8; }
+    14% { transform: scale(1.02); opacity: 1; }
+    28% { transform: scale(1); opacity: 0.8; }
+    42% { transform: scale(1.01); opacity: 0.9; }
+    70% { transform: scale(1); opacity: 0.8; }
+}
+
+/* Slide in from right (toast alerts, onboarding pages) */
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Slide in from left (timeline lists) */
+@keyframes slideInLeft {
+    from {
+        transform: translateX(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Slide in from bottom (modal sheets, menus) */
+@keyframes slideInUp {
+    from {
+        transform: translateY(100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Fade in background overlays */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Horizontal shake for incorrect validation */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-6px); }
+    20%, 40%, 60%, 80% { transform: translateX(6px); }
+}
+
+/* AI Chat typing indicator bouncing dots */
+@keyframes typing {
+    0%, 100% { transform: translateY(0); opacity: 0.4; }
+    50% { transform: translateY(-6px); opacity: 1; }
+}
+
+/* Sound waveform virtual height scaling */
+@keyframes waveform {
+    0%, 100% { height: 4px; }
+    50% { height: 28px; }
+}
+
+/* Countdown number scale down transition */
+@keyframes countdown {
+    0% { transform: scale(2); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: scale(1); opacity: 0.2; }
+}
+
+/* Progress bar filling animation */
+@keyframes progressFill {
+    from { width: 0%; }
+    to { width: 100%; }
+}
+
+/* Red full-screen warning flash */
+@keyframes flashRed {
+    0% { opacity: 0.7; background-color: var(--emergency-red); }
+    50% { opacity: 0.1; }
+    100% { opacity: 0; }
+}
+
+/* Circular ripple expander */
+@keyframes ripple {
+    0% {
+        transform: scale(0.8);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1.6);
+        opacity: 0;
+    }
+}
+
+/* Pulsing red dot for active recording status */
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+
+/* ===== UTILITY CLASS DEFINITIONS ===== */
+
+.animate-pulse {
+    animation: pulse 2s infinite ease-in-out;
+}
+
+.animate-emergency-pulse {
+    animation: emergencyPulse 1.8s infinite ease-in-out;
+}
+
+.animate-heartbeat {
+    animation: heartbeat 1.5s infinite ease-in-out;
+}
+
+.animate-slide-in-right {
+    animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-in-left {
+    animation: slideInLeft 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-in-up {
+    animation: slideInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.3s ease-out forwards;
+}
+
+.animate-shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+.animate-countdown {
+    animation: countdown 1s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
+}
+
+.animate-blink {
+    animation: blink 1.2s infinite ease-in-out;
+}
+
+.animate-ripple {
+    animation: ripple 2s infinite ease-out;
+}
+
+
+/* ===== ACCESSIBILITY: REDUCED MOTION QUERY ===== */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-delay: -1ms !important;
+        animation-duration: 1ms !important;
+        animation-iteration-count: 1 !important;
+        background-attachment: initial !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0s !important;
+        transition-delay: 0s !important;
+    }
+    
+    .emergency-ripple {
+        display: none !important;
+    }
+    
+    .emergency-btn {
+        animation: none !important;
+    }
+}

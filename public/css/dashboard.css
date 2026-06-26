@@ -1,0 +1,540 @@
+/* ==========================================================================
+   SOS Emergency Response App - Emergency Progress Dashboard
+   ========================================================================== */
+
+#screen-dashboard {
+    background-color: var(--bg-primary);
+    padding-bottom: 0;
+    height: 100vh;
+}
+
+.dashboard-screen-content {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* ===== TOP SUMMARY BAR ===== */
+.dashboard-header {
+    background: rgba(18, 18, 26, 0.85);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border-bottom: 1px solid rgba(255, 45, 85, 0.2);
+    padding: var(--space-4);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+    box-shadow: 0 4px 20px rgba(255, 45, 85, 0.1);
+}
+
+.dashboard-header-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard-title-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.dashboard-pulse-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: var(--emergency-red);
+    box-shadow: 0 0 10px var(--emergency-red);
+    animation: blink 1.2s infinite ease-in-out;
+}
+
+.dashboard-title {
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    color: #ffffff;
+}
+
+.dashboard-timer {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+.dashboard-summary-stats {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: var(--space-1);
+}
+
+/* ===== MAIN CONTENT GRID ===== */
+.dashboard-grid {
+    flex-grow: 1;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+    padding: var(--space-4);
+}
+
+/* Desktop layout */
+@media (min-width: 768px) {
+    .dashboard-grid {
+        grid-template-columns: 1.2fr 1fr;
+        height: calc(100vh - 76px);
+    }
+}
+
+.dashboard-column {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.dashboard-column.scrollable {
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+/* ===== TIMELINE WIDGET (LEFT COLUMN) ===== */
+.dashboard-card-title {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    margin-bottom: var(--space-4);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.timeline-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 250px;
+    max-height: 350px;
+}
+
+@media (min-width: 768px) {
+    .timeline-card {
+        min-height: 450px;
+        max-height: calc(100vh - 350px);
+    }
+}
+
+.timeline {
+    position: relative;
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    overflow-y: auto;
+    flex-grow: 1;
+    padding-bottom: var(--space-4);
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 10px;
+    bottom: 10px;
+    width: 2px;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.timeline-event {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    animation: slideInLeft 0.3s ease-out;
+}
+
+.timeline-dot {
+    position: absolute;
+    left: -20px;
+    top: 5px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--bg-secondary);
+    border: 3px solid var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.timeline-event.success .timeline-dot { border-color: var(--success-green); box-shadow: 0 0 6px var(--success-green-glow); }
+.timeline-event.warning .timeline-dot { border-color: var(--warning-yellow); box-shadow: 0 0 6px var(--warning-yellow-glow); }
+.timeline-event.danger .timeline-dot { border-color: var(--emergency-red); box-shadow: 0 0 6px var(--emergency-red-glow); }
+.timeline-event.pending .timeline-dot { border-color: var(--pending-blue); box-shadow: 0 0 6px var(--pending-blue-glow); }
+
+.timeline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2px;
+}
+
+.timeline-msg {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.timeline-time {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: monospace;
+}
+
+/* ===== CONTACT STATUS WIDGET ===== */
+.contacts-status-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: var(--space-2);
+}
+
+.contact-status-card {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-3);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    position: relative;
+}
+
+.contact-status-card .name {
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.contact-status-card .relation {
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
+.contact-status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+.contact-status-indicator.sending { color: var(--warning-yellow); }
+.contact-status-indicator.sent { color: var(--pending-blue); }
+.contact-status-indicator.delivered { color: var(--success-green); }
+
+/* ===== POLICE STATION CASCADE WIDGET ===== */
+.police-cascade {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.escalation-timer-container {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: var(--radius-sm);
+    padding: var(--space-2) var(--space-3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12.5px;
+    border: 1px solid var(--glass-border);
+}
+
+.escalation-timer-label {
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.escalation-timer-value {
+    color: var(--warning-yellow);
+    font-weight: 700;
+    font-family: monospace;
+}
+
+.escalation-progress-bar {
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-full);
+    margin-top: var(--space-2);
+    overflow: hidden;
+}
+
+.escalation-progress-fill {
+    height: 100%;
+    background: var(--warning-yellow);
+    width: 100%;
+    transition: width 1s linear;
+}
+
+.police-batch {
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-3);
+    background: rgba(255, 255, 255, 0.01);
+    transition: var(--transition-smooth);
+}
+
+.police-batch.current-batch {
+    border-color: rgba(10, 132, 255, 0.35);
+    background: rgba(10, 132, 255, 0.03);
+    box-shadow: 0 0 15px rgba(10, 132, 255, 0.1);
+}
+
+.police-batch-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: var(--space-2);
+}
+
+.police-batch.current-batch .police-batch-header {
+    color: var(--pending-blue);
+}
+
+.police-stations-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.police-station-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-2) var(--space-3);
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.police-station-name {
+    font-weight: 500;
+    max-width: 65%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.police-station-distance {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: monospace;
+}
+
+.batch-separator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-muted);
+    font-size: 12px;
+    margin: var(--space-1) 0;
+    opacity: 0.5;
+}
+
+/* ===== REAL GPS WIDGET ===== */
+.coords-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--space-2);
+}
+.coords-text {
+    font-family: monospace;
+    font-size: 12.5px;
+    color: var(--text-muted);
+}
+.map-btn {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--pending-blue);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* ===== REAL AUDIO CAPTURE WIDGET ===== */
+.audio-widget-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.audio-status-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.audio-recording-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--emergency-red);
+    animation: blink 1s infinite;
+}
+
+.audio-status-text {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.waveform-canvas {
+    width: 100%;
+    height: 48px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+}
+
+/* ===== BATTERY WIDGET ===== */
+.battery-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.battery-percent {
+    font-size: 14px;
+    font-weight: 700;
+    font-family: monospace;
+}
+.battery-banner {
+    background: rgba(255, 45, 85, 0.15);
+    border: 1px solid rgba(255, 45, 85, 0.3);
+    color: var(--emergency-red);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-sm);
+    font-size: 11.5px;
+    font-weight: 600;
+    margin-top: var(--space-2);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* ===== MEDICAL CARD ===== */
+.medical-summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-2);
+    font-size: 12.5px;
+}
+.medical-summary-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.medical-summary-label {
+    color: var(--text-muted);
+    font-size: 11px;
+    text-transform: uppercase;
+}
+.medical-summary-value {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+/* ===== FOOTER CONTROLS / CANCEL BUTTON ===== */
+.dashboard-footer {
+    background: rgba(18, 18, 26, 0.95);
+    border-top: 1px solid var(--glass-border);
+    padding: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    z-index: 10;
+    padding-bottom: max(var(--space-4), env(safe-area-inset-bottom));
+}
+
+.triage-nav-btn {
+    background: linear-gradient(135deg, var(--pending-blue), #0066d6);
+}
+
+/* Hold to Cancel Button */
+.hold-cancel-container {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.hold-cancel-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: rgba(255, 45, 85, 0.15);
+    width: 0%;
+    transition: width 0.1s linear;
+    pointer-events: none;
+}
+
+.hold-cancel-btn {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    color: var(--emergency-red);
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    user-select: none;
+    -webkit-user-select: none;
+    z-index: 5;
+    outline: none;
+}
+
+.hold-cancel-btn:active {
+    color: #ffffff;
+}
+
+/* Keyframes */
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+@keyframes slideInLeft {
+    from { transform: translateX(-20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}

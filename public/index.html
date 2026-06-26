@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <meta name="description" content="SOS Emergency Response App - One-tap emergency alert with live GPS tracking, AI triage, and police escalation">
+    <meta name="theme-color" content="#0a0a0f">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>SOS Guardian</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/emergency.css">
+    <link rel="stylesheet" href="css/contacts.css">
+    <link rel="stylesheet" href="css/profile.css">
+    <link rel="stylesheet" href="css/ai-chat.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+    <!-- ===== FLASH OVERLAY (for screen flash effect) ===== -->
+    <div id="flash-overlay" class="flash-overlay"></div>
+
+    <!-- ===== TEST MODE TOGGLE ===== -->
+    <button id="test-mode-toggle" class="test-mode-btn" aria-label="Toggle Test Mode" title="Toggle Test Mode">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9.3 6.2a4.55 4.55 0 0 0 5.4 0"/>
+            <path d="M4 10h16"/>
+            <path d="M14 22c1.8-3.3 4-7.4 4-10.5C18 6.8 15.3 3 12 3S6 6.8 6 11.5C6 14.6 8.2 18.7 10 22"/>
+            <path d="M12 22v-3"/>
+        </svg>
+    </button>
+
+    <!-- ===== TOAST CONTAINER ===== -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- ===== SCREEN: ONBOARDING / PROFILE SETUP ===== -->
+    <div id="screen-onboarding" class="screen">
+        <div class="screen-content">
+            <div class="onboarding-header">
+                <div class="app-logo">
+                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                        <circle cx="24" cy="24" r="22" stroke="#ff2d55" stroke-width="3" fill="rgba(255,45,85,0.1)"/>
+                        <path d="M24 12v12M18 24h12M24 36v-4M16 32h16" stroke="#ff2d55" stroke-width="2.5" stroke-linecap="round"/>
+                        <circle cx="24" cy="24" r="4" fill="#ff2d55"/>
+                    </svg>
+                </div>
+                <h1 class="app-title">SOS Guardian</h1>
+                <p class="app-subtitle">Set up your profile to get started</p>
+            </div>
+            <div id="profile-wizard-container" class="wizard-container"></div>
+        </div>
+    </div>
+
+    <!-- ===== SCREEN: HOME / EMERGENCY ===== -->
+    <div id="screen-home" class="screen">
+        <div class="screen-content">
+            <!-- Status Bar -->
+            <div class="status-bar" id="status-bar">
+                <div class="status-item" id="gps-status">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+                        <circle cx="12" cy="9" r="2.5"/>
+                    </svg>
+                    <span>GPS: Acquiring...</span>
+                </div>
+                <div class="status-item" id="battery-status">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="6" width="18" height="12" rx="2"/>
+                        <path d="M22 10v4"/>
+                        <rect id="battery-fill-rect" x="4" y="8" width="14" height="8" rx="1" fill="currentColor" opacity="0.3"/>
+                    </svg>
+                    <span>Battery: --</span>
+                </div>
+                <div class="status-item" id="signal-status">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 20h.01M7 20v-4M12 20v-8M17 20V8M22 4v16" stroke="#30d158" stroke-width="3"/>
+                    </svg>
+                    <span style="color:var(--success-green);">Signal: Strong</span>
+                </div>
+            </div>
+
+            <!-- Emergency Button Area -->
+            <div class="emergency-area">
+                <div class="emergency-ripple" id="emergency-ripple"></div>
+                <button class="emergency-btn" id="emergency-btn" aria-label="Activate Emergency SOS">
+                    <div class="emergency-btn-inner">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="currentColor"/>
+                        </svg>
+                        <span class="emergency-btn-text">SOS</span>
+                    </div>
+                </button>
+                <p class="emergency-hint">Tap to activate emergency</p>
+            </div>
+
+            <!-- Location Info -->
+            <div class="location-info" id="location-info">
+                <div class="location-coords">
+                    <span id="coords-display">Acquiring location...</span>
+                </div>
+                <a id="maps-link" class="maps-link" href="#" target="_blank" rel="noopener">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/>
+                    </svg>
+                    Open in Maps
+                </a>
+            </div>
+        </div>
+
+        <!-- Countdown Overlay -->
+        <div class="countdown-overlay" id="countdown-overlay">
+            <div class="countdown-content">
+                <div class="countdown-number" id="countdown-number">3</div>
+                <p class="countdown-text">Emergency activating...</p>
+                <button class="cancel-countdown-btn" id="cancel-countdown-btn">CANCEL</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== SCREEN: EMERGENCY DASHBOARD ===== -->
+    <div id="screen-dashboard" class="screen">
+        <div class="screen-content dashboard-screen-content">
+            <div id="dashboard-container" class="dashboard-container"></div>
+        </div>
+    </div>
+
+    <!-- ===== SCREEN: AI TRIAGE CHAT ===== -->
+    <div id="screen-ai-chat" class="screen">
+        <div class="screen-content chat-screen-content">
+            <div id="ai-chat-container" class="ai-chat-container"></div>
+        </div>
+    </div>
+
+    <!-- ===== SCREEN: CONTACTS ===== -->
+    <div id="screen-contacts" class="screen">
+        <div class="screen-content">
+            <div class="page-header">
+                <h1>Emergency Contacts</h1>
+                <p class="page-subtitle">People who will be alerted during an emergency</p>
+            </div>
+            <div id="contacts-container" class="contacts-container"></div>
+        </div>
+    </div>
+
+    <!-- ===== SCREEN: PROFILE / SETTINGS ===== -->
+    <div id="screen-profile" class="screen">
+        <div class="screen-content">
+            <div class="page-header">
+                <h1>My Profile</h1>
+                <p class="page-subtitle">Your medical info is included in emergency alerts</p>
+            </div>
+            <div id="profile-container" class="profile-container"></div>
+        </div>
+    </div>
+
+    <!-- ===== MODAL OVERLAY ===== -->
+    <div id="modal-overlay" class="modal-overlay">
+        <div id="modal-content" class="modal-content"></div>
+    </div>
+
+    <!-- ===== PIN AUTHENTICATION OVERLAY ===== -->
+    <div id="pin-auth-overlay" class="modal-overlay">
+        <div class="modal-content pin-auth-content">
+            <h2 id="pin-auth-title" class="pin-auth-title">Security Lock</h2>
+            <p id="pin-auth-subtitle" class="pin-auth-subtitle">Enter 4-digit PIN to authenticate</p>
+            
+            <!-- PIN dots -->
+            <div class="pin-display">
+                <div class="pin-dot" id="pin-dot-1"></div>
+                <div class="pin-dot" id="pin-dot-2"></div>
+                <div class="pin-dot" id="pin-dot-3"></div>
+                <div class="pin-dot" id="pin-dot-4"></div>
+            </div>
+
+            <!-- PIN keypad -->
+            <div class="pin-keypad">
+                <button class="pin-key btn btn-secondary" data-val="1">1</button>
+                <button class="pin-key btn btn-secondary" data-val="2">2</button>
+                <button class="pin-key btn btn-secondary" data-val="3">3</button>
+                <button class="pin-key btn btn-secondary" data-val="4">4</button>
+                <button class="pin-key btn btn-secondary" data-val="5">5</button>
+                <button class="pin-key btn btn-secondary" data-val="6">6</button>
+                <button class="pin-key btn btn-secondary" data-val="7">7</button>
+                <button class="pin-key btn btn-secondary" data-val="8">8</button>
+                <button class="pin-key btn btn-secondary" data-val="9">9</button>
+                <button class="pin-key btn btn-secondary pin-key-clear" id="pin-key-clear">C</button>
+                <button class="pin-key btn btn-secondary" data-val="0">0</button>
+                <button class="pin-key btn btn-secondary pin-key-back" id="pin-key-back">⌫</button>
+            </div>
+            
+            <button class="btn btn-secondary" id="pin-auth-cancel-btn">Cancel</button>
+        </div>
+    </div>
+
+
+    <!-- ===== BOTTOM NAVIGATION ===== -->
+    <nav class="bottom-nav" id="bottom-nav">
+        <button class="nav-item active" data-screen="home" id="nav-home">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+            </svg>
+            <span>SOS</span>
+        </button>
+        <button class="nav-item" data-screen="contacts" id="nav-contacts">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+            </svg>
+            <span>Contacts</span>
+        </button>
+        <button class="nav-item" data-screen="profile" id="nav-profile">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+            </svg>
+            <span>Profile</span>
+        </button>
+    </nav>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script src="js/notifications.js"></script>
+    <script src="js/location.js"></script>
+    <script src="js/battery.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/police.js"></script>
+    <script src="js/profile.js"></script>
+    <script src="js/contacts.js"></script>
+    <script src="js/ai-triage.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/emergency.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
